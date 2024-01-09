@@ -12,3 +12,13 @@ def isClove(text) -> bool:
         return True
     return False
 
+def lines_from_string(text:str, delimeter:str="\n") -> list[str]:
+    """
+    Gets a list of strings that represent the lines of the inputted string. 
+    Lines are determined by line breaks, or an optional 'delimeter' parameter.
+    
+    Returns: 
+        - list[str]
+    """
+    return text.split(delimeter)
+    
