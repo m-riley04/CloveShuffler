@@ -45,3 +45,10 @@ def get_current_cards() -> list[mw.Card]:
     
     # Return the list of cards from helper function
     return get_deck_cards(deckName)
+
+# Create the menu action for the plugin
+action = QAction("Shuffle Answers", mw)
+# Connect the signal of "triggered" to the "run" function
+qconnect(action.triggered, run)
+# Add the "Shuffle Answers" action to the tools dropdown menu
+mw.form.menuTools.addAction(action)
