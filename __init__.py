@@ -32,3 +32,16 @@ def get_deck_cards(deckName:str) -> list[mw.Card]:
     # Get a list of card IDs
     return mw.col.find_cards(searchTag)
 
+def get_current_cards() -> list[mw.Card]:
+    """
+    Gets a list of the current deck's cards.
+    
+    Returns: 
+        - list[Card]
+    """
+    # Get the current deck and name
+    deck = mw.col.decks.current()
+    deckName = deck.get("name")
+    
+    # Return the list of cards from helper function
+    return get_deck_cards(deckName)
