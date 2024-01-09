@@ -22,3 +22,13 @@ def lines_from_string(text:str, delimeter:str="\n") -> list[str]:
     """
     return text.split(delimeter)
     
+
+def get_deck_cards(deckName:str) -> list[mw.Card]:
+    """Returns a list of cards when given a deck's name"""
+    # Form the search tag for cards without spaces
+    searchTag = "deck:" + deckName
+    searchTag = searchTag.replace(" ", "_")
+    
+    # Get a list of card IDs
+    return mw.col.find_cards(searchTag)
+
