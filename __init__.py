@@ -44,6 +44,21 @@ def isClove(text) -> bool:
         return True
     return False
 
+def shuffle(text:str) -> str:
+    """
+    Shuffles the Clove answers of a card in a random order.
+    
+    Determines what lines to shuffle based on whether it finds Clove formatting in the line.
+    If the first line does not have Clove formatting, it will stay the first line. After that,
+    if any Clove lines are detected, the following lines will be shuffled with it. 
+    
+    Returns: 
+        - str
+    """
+    # Break the text into lines
+    frontLines = lines_from_string(text, "<br>")
+    
+    
 def lines_from_string(text:str, delimeter:str="\n") -> list[str]:
     """
     Gets a list of strings that represent the lines of the inputted string. 
