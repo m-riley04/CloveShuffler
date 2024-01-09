@@ -1,6 +1,38 @@
 from aqt import mw
 from aqt.utils import showInfo, qconnect, TextFormat
 from aqt.qt import *
+
+def run():
+    """
+    The main command that is to be connected to the "Shuffle" action button. Does a sequence of actions:
+    1. Accesses the current deck and cards
+    2. Accesses the front and back fields of each cards
+    3. Shuffles the accessed fields (if any Clove fields exist)
+    
+    Returns:
+        - None
+    """
+    # Get a list of the current cards
+    ids = get_current_cards()
+    
+    # Iterate through the card IDs
+    for id in ids:
+        # Initialize the card object
+        card = mw.col.get_card(id)
+        
+        # Get the front and back text
+        front = card.note().fields[0]
+        back = card.note().fields[1]
+
+        # Shuffle the card
+        newFront = shuffle(front)
+        
+        # Show the user the shuffled card
+        showInfo(newFront, None, None, "info", "Anki", "plain")
+        
+    # Tell the user the process is finished
+    showInfo("Current deck's card answers have been successfully shuffled!")
+            
 def isClove(text) -> bool:
     """
     Checks whether or not a card face has Clove text formatting.
