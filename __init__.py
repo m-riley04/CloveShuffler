@@ -3,13 +3,13 @@ from aqt.utils import showInfo, qconnect
 from aqt.qt import *
 import random
 
-def shuffleCommand():
+def shuffleTaggedInDeck(card):
     """
     Description:
-        The main command that is to be connected to the "Shuffle" action button. Does a sequence of actions:
-        1. Accesses the current deck and cards
-        2. Accesses the front and back fields of each cards
-        3. Shuffles the accessed fields (if any Clove fields exist)
+        A command that attaches to the "Tagged In Deck" menu option for the shuffler. Does a sequence of actions:\\
+            1. Accesses the current deck and cards\\
+            2. Accesses the front and back fields of each cards\\
+            3. Shuffles the accessed fields (if any Clove fields exist)\\
     
     Arguments:
         None
@@ -18,22 +18,23 @@ def shuffleCommand():
         None
     """
     # Get a list of the current cards
-    ids = get_current_cards()
+    ids = get_current_deck_tagged_cards()
     
     # Call on the helper function to do the work
     cardCount = _shuffleHelper(ids)
         
     # Tell the user the process is finished
-    message = "Shuffled " + cardCount + " cards with Clove lines in the current deck!"
-    showInfo(message)
-    
-def shuffleTags(card):
+    if (mw.state != "review"):
+        message = "Shuffled " + str(cardCount) + " 'shuffle' tagged cards in the current deck!"
+        showInfo(message)
+
+def shuffleTaggedEverywhere(card):
     """
     Description:
-        The main command that is to be connected to the background shuffling. Does a sequence of actions:
-        1. Accesses the current deck and cards
-        2. Accesses the front and back fields of each cards
-        3. Shuffles the accessed fields (if any Clove fields exist)
+        A command that attaches to the "Tagged Everywhere" menu option for the shuffler. Does a sequence of actions:\\
+            1. Accesses the current deck and cards\\
+            2. Accesses the front and back fields of each cards\\
+            3. Shuffles the accessed fields (if any Clove fields exist)\\
     
     Arguments:
         None
@@ -48,8 +49,67 @@ def shuffleTags(card):
     cardCount = _shuffleHelper(ids)
         
     # Tell the user the process is finished
-    #message = "Shuffled " + cardCount + " 'shuffle' tagged cards!"
-    #showInfo(message)
+    if (mw.state != "review"):
+        message = "Shuffled " + str(cardCount) + " 'shuffle' tagged cards!"
+        showInfo(message)
+
+def shuffleInDeck(card):
+    """
+    Description:
+        A command that attaches to the "In Deck" menu option for the shuffler.  Does a sequence of actions:\\
+            1. Accesses the current deck and cards\\
+            2. Accesses the front and back fields of each cards\\
+            3. Shuffles the accessed fields (if any Clove fields exist)\\
+    
+    Arguments:
+        None
+    
+    Returns:
+        None
+    """
+    # Get a list of the current cards
+    ids = get_current_cards()
+    
+    # Call on the helper function to do the work
+    cardCount = _shuffleHelper(ids)
+        
+    # Tell the user the process is finished
+    if (mw.state != "review"):
+        message = "Shuffled " + str(cardCount) + " cards in the current deck!"
+        showInfo(message)
+    
+def shuffleEverywhere(card):
+    """
+    WARNING: Quite expensive (O^2)
+        
+    Description:
+        A command that attaches to the "Everywhere" menu option for the shuffler. Does a sequence of actions:\\
+            1. Accesses the current deck and cards\\
+            2. Accesses the front and back fields of each cards\\
+            3. Shuffles the accessed fields (if any Clove fields exist)
+        
+    Arguments:
+        None
+    
+    Returns:
+        None
+    """
+    # Get a list of all the deck names
+    decks = mw.col.decks.all_names()
+    
+    # Iterate through all the decks
+    cardCount = 0
+    for deck in decks:
+        
+        ids = get_deck_cards(deck)
+        
+        # Call on the helper function to do the work
+        cardCount += _shuffleHelper(ids)
+        
+    # Tell the user the process is finished
+    if (mw.state != "review"):
+        message = "Shuffled " + str(cardCount) + " cards!"
+        showInfo(message)
 
 def _shuffleHelper(ids:list) -> int:
     """
@@ -63,6 +123,7 @@ def _shuffleHelper(ids:list) -> int:
         int: the number of cards shuffled
     """
     # Iterate through the card IDs
+    counter = 0
     for id in ids:
         # Initialize the card object
         card = mw.col.get_card(id)
@@ -80,6 +141,12 @@ def _shuffleHelper(ids:list) -> int:
         # Write the data to the card
         card.note().fields[0] = newFront
         mw.col.update_note(card.note())
+        
+        # Increment the counter
+        counter += 1
+        
+    # Return the shuffled card count
+    return counter
 
 def _shuffle(text:str) -> str:
     """
