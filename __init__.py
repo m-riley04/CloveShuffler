@@ -360,6 +360,28 @@ def get_tagged_cards() -> list:
     
 # Hook up the tag shuffle to the answer button
 gui_hooks.reviewer_did_show_answer.append(shuffleTags)
+def toggled_autoshuffle():
+    """
+    Description:
+        The command for when the "Autoshuffle" action button is toggled
+    
+    Arguments:
+        None
+        
+    Returns:
+        None
+    """
+    if (not action_autoshuffle.isChecked()):
+        config["autoshuffle"] = False
+        autoshuffle = False
+        gui_hooks.reviewer_did_show_answer.remove(shuffleMethods[autoshuffle_method])
+    else:
+        config["autoshuffle"] = True
+        autoshuffle = True
+        gui_hooks.reviewer_did_show_answer.append(shuffleMethods[autoshuffle_method])
+        
+    mw.addonManager.writeConfig(__name__, config)
+    
     
 # Create the menu action for the plugin
 action = QAction("Shuffle Clove", mw)
