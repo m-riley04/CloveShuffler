@@ -9,7 +9,7 @@ def shuffleTaggedInDeck(card):
         A command that attaches to the "Tagged In Deck" menu option for the shuffler. Does a sequence of actions:\\
             1. Accesses the current deck and cards\\
             2. Accesses the front and back fields of each cards\\
-            3. Shuffles the accessed fields (if any Clove fields exist)\\
+            3. Shuffles the accessed fields (if any Cloze fields exist)\\
     
     Arguments:
         None
@@ -34,7 +34,7 @@ def shuffleTaggedEverywhere(card):
         A command that attaches to the "Tagged Everywhere" menu option for the shuffler. Does a sequence of actions:\\
             1. Accesses the current deck and cards\\
             2. Accesses the front and back fields of each cards\\
-            3. Shuffles the accessed fields (if any Clove fields exist)\\
+            3. Shuffles the accessed fields (if any Cloze fields exist)\\
     
     Arguments:
         None
@@ -59,7 +59,7 @@ def shuffleInDeck(card):
         A command that attaches to the "In Deck" menu option for the shuffler.  Does a sequence of actions:\\
             1. Accesses the current deck and cards\\
             2. Accesses the front and back fields of each cards\\
-            3. Shuffles the accessed fields (if any Clove fields exist)\\
+            3. Shuffles the accessed fields (if any Cloze fields exist)\\
     
     Arguments:
         None
@@ -86,7 +86,7 @@ def shuffleEverywhere(card):
         A command that attaches to the "Everywhere" menu option for the shuffler. Does a sequence of actions:\\
             1. Accesses the current deck and cards\\
             2. Accesses the front and back fields of each cards\\
-            3. Shuffles the accessed fields (if any Clove fields exist)
+            3. Shuffles the accessed fields (if any Cloze fields exist)
         
     Arguments:
         None
@@ -114,7 +114,7 @@ def shuffleEverywhere(card):
 def _shuffleHelper(ids:list) -> int:
     """
     Description:
-        The helper class for shuffling. Takes a list of Card ids and shuffles the Clove within them.
+        The helper class for shuffling. Takes a list of Card ids and shuffles the Cloze within them.
     
     Arguments:
         ids (list): a list of cards
@@ -151,16 +151,16 @@ def _shuffleHelper(ids:list) -> int:
 def _shuffle(text:str) -> str:
     """
     Definition: 
-        Shuffles the Clove answers of a card in a random order.
-        Determines what lines to shuffle based on whether it finds Clove formatting in the line.
-        If the first line does not have Clove formatting, it will stay the first line. After that,
-        if any Clove lines are detected, the following lines will be shuffled with it. 
+        Shuffles the Cloze answers of a card in a random order.
+        Determines what lines to shuffle based on whether it finds Cloze formatting in the line.
+        If the first line does not have Cloze formatting, it will stay the first line. After that,
+        if any Cloze lines are detected, the following lines will be shuffled with it. 
     
     Args:
         text (str): The field/card text to shuffle
     
     Returns: 
-        str: The original card text, but with shuffled Clove lines
+        str: The original card text, but with shuffled Cloze lines
     """
     #=== Add temporary line breaks to certain HTML elements (ul, li, and br)
     replacedText = insert_into_string_at_query(text, "\n", "<ul>")
@@ -173,36 +173,36 @@ def _shuffle(text:str) -> str:
     
     # Construct the final string piece by piece in 3 parts
     firstLines = []
-    cloveLines = []
+    ClozeLines = []
     lastLines = []
-    atClove = False
-    pastClove = False
+    atCloze = False
+    pastCloze = False
     for line in lines:
         # Check for </ul>
         if ("</ul>" in line):
-            pastClove = True
+            pastCloze = True
             
-        # If the Clove part is done, append the rest to the last part
-        if (pastClove):
+        # If the Cloze part is done, append the rest to the last part
+        if (pastCloze):
             lastLines.append(line)
             continue
         
         # Check for first lines of text
-        if (not atClove and not isClove(line)):
-            # If there's no Clove formatting and clove hasn't been found already, append the text to the final lines 
+        if (not atCloze and not isCloze(line)):
+            # If there's no Cloze formatting and Cloze hasn't been found already, append the text to the final lines 
             firstLines.append(line)
             continue
-        atClove = True
+        atCloze = True
         
-        # Append the line to the list of cloveLines
-        cloveLines.append(line)
+        # Append the line to the list of ClozeLines
+        ClozeLines.append(line)
         
-    # Randomize the clove lines
+    # Randomize the Cloze lines
     random.seed()
-    random.shuffle(cloveLines)
+    random.shuffle(ClozeLines)
     
     # Connect the 3 line parts together
-    firstLines += cloveLines
+    firstLines += ClozeLines
     firstLines += lastLines
     
     # Reconnect the lines back into a string
@@ -210,13 +210,13 @@ def _shuffle(text:str) -> str:
     
     return finalString
 
-def isClove(text:str) -> bool:
+def isCloze(text:str) -> bool:
     """
     Description:
-        Checks whether or not a card face has Clove text formatting.
+        Checks whether or not a card face has Cloze text formatting.
     
     Args:
-        text (str): The text to check for any Clove formatting
+        text (str): The text to check for any Cloze formatting
     
     Returns: 
         - bool
@@ -389,7 +389,7 @@ autoshuffle = config["autoshuffle"]
 autoshuffle_method = config["autoshuffle_method"]
     
 # Create the menu action for the plugin
-group                   = QMenu("CloveShuffler")
+group                   = QMenu("ClozeShuffler")
 group_methods           = QMenu("Shuffle")
 action_taggedDeck       = QAction("Tagged In Deck", mw)
 action_taggedEverywhere = QAction("Tagged Everywhere", mw)
@@ -417,7 +417,7 @@ qconnect(action_everywhere.triggered, shuffleEverywhere)
 qconnect(action_autoshuffle.triggered, toggled_autoshuffle)
 
 # Add the "Shuffle" group to the tools dropdown menu
-#mw.form.menuTools.addSection("CloveShuffler")
-#mw.form.menubar.addSection("CloveShuffler")
+#mw.form.menuTools.addSection("ClozeShuffler")
+#mw.form.menubar.addSection("ClozeShuffler")
 group.addAction(action_autoshuffle)
 mw.form.menubar.addMenu(group)
