@@ -1,6 +1,7 @@
-from aqt import mw
-from aqt.utils import showInfo, qconnect, TextFormat
+from aqt import mw, gui_hooks
+from aqt.utils import showInfo, qconnect
 from aqt.qt import *
+import random
 
 def run():
     """
