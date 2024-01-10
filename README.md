@@ -12,12 +12,27 @@ This addon is in it's very early stages of development and release. It is entire
     * Shuffle all cards in the current deck
     * Shuffle all cards
 * Autoshuffling
-    * When reviewing, the shuffler will automatically shuffle using a specified method. This method can be changed using the [config](#Configuration).
+    * When reviewing, the shuffler will automatically shuffle using a specified method. This method can be changed using the [config](https://github.com/m-riley04/CloveShuffler/blob/main/README.md#Configuration).
+
+# Tagging
+If you only want CloveShuffler to shuffle specific cards, you can tag your cards with the word "shuffle".
+
+## --PLEASE NOTE--
+The [autoshuffler's default shuffling method](https://github.com/m-riley04/CloveShuffler/blob/main/config.md#autoshuffle_method) is every tagged card within the current deck. This means that by default, if there are no tagged cards in the current deck, nothing will be shuffled. Details on how to change the default shuffling method will be discussed in the next section.
 
 # Configuration
 In short, if you want to change the configuration, simply go to your addons panel in the Tools/Add-Ons menu option, select "CloveShuffler," and then click the "Config" button.
 
-Configuration details can be found extensively in the [configuration documentation](config.md), which is also shown in the Add-On menu.
+Configuration details can be found extensively in the [configuration documentation](https://github.com/m-riley04/CloveShuffler/blob/main/config.md), which is also shown in the Add-On menu.
+
+# Installation
+1. Open your installation of Anki
+2. Navigate with the menu bar to "Tools/Add-ons" and select it
+3. From here, you have a few options
+    - Click "Get Add-ons" if you have the add-on code
+    - Click "Install from file..." if you have downloaded the .zip or .ankiaddon file from the [GitHub's releases](https://github.com/m-riley04/CloveShuffler/releases)
+    - Click "View Files" if you have a regular folder with the add-on's files inside, then drag the folder into the "addons21" folder
+4. (Optional) Restart Anki
 
 # Technical Specifications
 * Anki Version:     v23.12.1
