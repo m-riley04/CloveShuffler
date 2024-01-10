@@ -20,27 +20,12 @@ def shuffleCommand():
     # Get a list of the current cards
     ids = get_current_cards()
     
-    # Iterate through the card IDs
-    for id in ids:
-        # Initialize the card object
-        card = mw.col.get_card(id)
-        
-        # Get the front and back text
-        front = card.note().fields[0]
-        back = card.note().fields[1]
-
-        # Shuffle the card
-        newFront = _shuffle(front)
-        
-        # Show the user the shuffled card (DEBUG)
-        #showInfo(newFront, None, None, "info", "Anki", "plain")
-        
-        # Write the data to the card
-        card.note().fields[0] = newFront
-        mw.col.update_note(card.note())
+    # Call on the helper function to do the work
+    cardCount = _shuffleHelper(ids)
         
     # Tell the user the process is finished
-    #showInfo("Shuffled the available Clove lines in the current deck!")
+    message = "Shuffled " + cardCount + " cards with Clove lines in the current deck!"
+    showInfo(message)
     
 def shuffleTags(card):
     """
@@ -59,6 +44,24 @@ def shuffleTags(card):
     # Get a list of the current cards
     ids = get_tagged_cards()
     
+    # Call on the helper function to do the work
+    cardCount = _shuffleHelper(ids)
+        
+    # Tell the user the process is finished
+    #message = "Shuffled " + cardCount + " 'shuffle' tagged cards!"
+    #showInfo(message)
+
+def _shuffleHelper(ids:list) -> int:
+    """
+    Description:
+        The helper class for shuffling. Takes a list of Card ids and shuffles the Clove within them.
+    
+    Arguments:
+        ids (list): a list of cards
+    
+    Returns:
+        int: the number of cards shuffled
+    """
     # Iterate through the card IDs
     for id in ids:
         # Initialize the card object
@@ -77,24 +80,6 @@ def shuffleTags(card):
         # Write the data to the card
         card.note().fields[0] = newFront
         mw.col.update_note(card.note())
-        
-    # Tell the user the process is finished
-    #showInfo("Shuffled all 'shuffle' tagged cards!")
-            
-def isClove(text:str) -> bool:
-    """
-    Description:
-        Checks whether or not a card face has Clove text formatting.
-    
-    Args:
-        text (str): The text to check for any Clove formatting
-    
-    Returns: 
-        - bool
-    """
-    if ("{{c" in text and "}}" in text):
-        return True
-    return False
 
 def _shuffle(text:str) -> str:
     """
@@ -157,6 +142,21 @@ def _shuffle(text:str) -> str:
     finalString = "".join(firstLines)
     
     return finalString
+
+def isClove(text:str) -> bool:
+    """
+    Description:
+        Checks whether or not a card face has Clove text formatting.
+    
+    Args:
+        text (str): The text to check for any Clove formatting
+    
+    Returns: 
+        - bool
+    """
+    if ("{{c" in text and "}}" in text):
+        return True
+    return False
 
 def insert_into_string(string:str, substr:str, index:int):
     """
