@@ -3,7 +3,7 @@ from aqt.utils import showInfo, qconnect
 from aqt.qt import *
 import random
 
-def run():
+def shuffleCommand():
     """
     Description:
         The main command that is to be connected to the "Shuffle" action button. Does a sequence of actions:
@@ -30,13 +30,18 @@ def run():
         back = card.note().fields[1]
 
         # Shuffle the card
-        newFront = shuffle(front)
+        newFront = _shuffle(front)
         
-        # Show the user the shuffled card
-        showInfo(newFront, None, None, "info", "Anki", "plain")
+        # Show the user the shuffled card (DEBUG)
+        #showInfo(newFront, None, None, "info", "Anki", "plain")
+        
+        # Write the data to the card
+        card.note().fields[0] = newFront
+        mw.col.update_note(card.note())
         
     # Tell the user the process is finished
-    showInfo("Current deck's card answers have been successfully shuffled!")
+    #showInfo("Shuffled the available Clove lines in the current deck!")
+    
 def shuffleTags(card):
     """
     Description:
