@@ -130,7 +130,7 @@ def insert_into_string(string:str, substr:str, index:int):
     """
     return string[:index] + substr + string[index:]
     
-def lines_from_string(text:str, delimeter:str="\n") -> list[str]:
+def insert_into_string_at_query(string:str, substr:str, query:str):
     """
     Description:
         Inserts a given string into another string after a given text query, possibly multiple times
@@ -143,6 +143,28 @@ def lines_from_string(text:str, delimeter:str="\n") -> list[str]:
     Returns:
         str: A new string with the inserted text within
     """
+    # Initialize local variables
+    _index = 0
+    _string = string
+    _loops = string.count(query)
+    
+    # Loop through counting the number of times the query is found
+    for i in range(_loops):
+        # Find the index of the next list element ending
+        _index = _string.find(query, _index+1)
+        
+        # Check for error
+        if (_index == -1):
+            # Send message to user
+            msg = "ERROR: There was an error when inserting at the query '" + query + "'."
+            showInfo(msg)
+            
+            # Return original, untouched string
+            return string
+        
+        # Insert the delimeter into the temporary string
+        _string = insert_into_string(_string, substr, _index+len(query))
+    return _string
     
     """
     return text.split(delimeter)
