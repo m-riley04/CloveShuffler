@@ -274,9 +274,11 @@ def get_tagged_cards() -> list:
     return mw.col.find_cards("tag:shuffle")
     
 # Hook up the tag shuffle to the answer button
+gui_hooks.reviewer_did_show_answer.append(shuffleTags)
+    
 # Create the menu action for the plugin
-action = QAction("Shuffle Answers", mw)
+action = QAction("Shuffle Clove", mw)
 # Connect the signal of "triggered" to the "run" function
-qconnect(action.triggered, run)
-# Add the "Shuffle Answers" action to the tools dropdown menu
+qconnect(action.triggered, shuffleCommand)
+# Add the "Shuffle Clove" action to the tools dropdown menu
 mw.form.menuTools.addAction(action)
