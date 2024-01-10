@@ -12,7 +12,7 @@ This addon is in it's very early stages of development and release. It is entire
     * Shuffle all cards in the current deck
     * Shuffle all cards
 * Autoshuffling
-    * When reviewing, the shuffler will automatically shuffle using a specified method. This method can be changed using the [config](https://github.com/m-riley04/CloveShuffler/blob/main/README.md#Configuration).
+    * When reviewing, the shuffler will automatically shuffle using a specified method. This method can be changed using the [config](#Configuration).
 
 # Tagging
 If you only want CloveShuffler to shuffle specific cards, you can tag your cards with the word "shuffle".
