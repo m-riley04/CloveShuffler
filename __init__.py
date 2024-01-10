@@ -49,7 +49,7 @@ def isClove(text:str) -> bool:
     Returns: 
         - bool
     """
-    if ("{{" in text & "}}" in text):
+    if ("{{c" in text and "}}" in text):
         return True
     return False
 
