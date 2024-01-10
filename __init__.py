@@ -53,7 +53,7 @@ def isClove(text:str) -> bool:
         return True
     return False
 
-def shuffle(text:str) -> str:
+def _shuffle(text:str) -> str:
     """
     Definition: 
         Shuffles the Clove answers of a card in a random order.
@@ -67,9 +67,54 @@ def shuffle(text:str) -> str:
     Returns: 
         str: The original card text, but with shuffled Clove lines
     """
-    # Break the text into lines
-    frontLines = lines_from_string(text, "<br>")
+    #=== Add temporary line breaks to certain HTML elements (ul, li, and br)
+    replacedText = insert_into_string_at_query(text, "\n", "<ul>")
+    replacedText = insert_into_string_at_query(replacedText, "\n", "</ul>")
+    replacedText = insert_into_string_at_query(replacedText, "\n", "</li>")
+    replacedText = insert_into_string_at_query(replacedText, "\n", "<br>")
     
+    # Break the text into lines
+    lines = lines_from_string(replacedText, "\n")
+    
+    # Construct the final string piece by piece in 3 parts
+    firstLines = []
+    cloveLines = []
+    lastLines = []
+    atClove = False
+    pastClove = False
+    for line in lines:
+        # Check for </ul>
+        if ("</ul>" in line):
+            pastClove = True
+            
+        # If the Clove part is done, append the rest to the last part
+        if (pastClove):
+            lastLines.append(line)
+            continue
+        
+        # Check for first lines of text
+        if (not atClove and not isClove(line)):
+            # If there's no Clove formatting and clove hasn't been found already, append the text to the final lines 
+            firstLines.append(line)
+            continue
+        atClove = True
+        
+        # Append the line to the list of cloveLines
+        cloveLines.append(line)
+        
+    # Randomize the clove lines
+    random.seed()
+    random.shuffle(cloveLines)
+    
+    # Connect the 3 line parts together
+    firstLines += cloveLines
+    firstLines += lastLines
+    
+    # Reconnect the lines back into a string
+    finalString = "".join(firstLines)
+    
+    return finalString
+
     """
     Description:
         Inserts a given string into another string at a given index.
