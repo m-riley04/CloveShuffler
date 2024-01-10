@@ -14,13 +14,24 @@ This addon is in it's very early stages of development and release. It is entire
 * Autoshuffling
     * When reviewing, the shuffler will automatically shuffle using a specified method. This method can be changed using the [config](#Configuration).
 
-# Tagging
+# Usage
+## Custom Menu Buttons
+Using the custom menu button, you can control CloveShuffler's functionality.
+
+<p align="center">
+    <img src='https://raw.githubusercontent.com/m-riley04/CloveShuffler/main/assets/menubar.JPG' width='300'>
+</p>
+
+## Tagging
 If you only want CloveShuffler to shuffle specific cards, you can tag your cards with the word "shuffle".
+<p align="center">
+    <img src='https://github.com/m-riley04/CloveShuffler/blob/main/assets/tag.JPG?raw=true' width='400' style="padding:50px">
+</p>
 
-## --PLEASE NOTE--
-The [autoshuffler's default shuffling method](https://github.com/m-riley04/CloveShuffler/blob/main/config.md#autoshuffle_method) is every tagged card within the current deck. This means that by default, if there are no tagged cards in the current deck, nothing will be shuffled. Details on how to change the default shuffling method will be discussed in the next section.
+> # --PLEASE NOTE--
+> The [autoshuffler's default shuffling method](https://github.com/m-riley04/CloveShuffler/blob/main/config.md#autoshuffle_method) is every tagged card within the current deck. This means that by default, if there are no tagged cards in the current deck, nothing will be shuffled. Details on how to change the default shuffling method will be discussed in the next section.
 
-# Configuration
+## Configuration
 In short, if you want to change the configuration, simply go to your addons panel in the Tools/Add-Ons menu option, select "CloveShuffler," and then click the "Config" button.
 
 Configuration details can be found extensively in the [configuration documentation](https://github.com/m-riley04/CloveShuffler/blob/main/config.md), which is also shown in the Add-On menu.
