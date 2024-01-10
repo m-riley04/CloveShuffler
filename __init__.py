@@ -327,6 +327,24 @@ def get_current_cards() -> list:
     # Return the list of cards from helper function
     return get_deck_cards(deckName)
 
+def get_current_deck_tagged_cards() -> list:
+    """
+    Description:
+        Gets all the cards tagged with "shuffle" within the current deck
+    
+    Arguments:
+        None
+        
+    Returns:
+        list: A list of the cards with a tag "shuffle" from the current deck
+    """
+    # Get the current deck and name
+    deck = mw.col.decks.current()
+    deckName = deck.get("name")
+    
+    query = "tag:shuffle, deck:" + deckName
+    return mw.col.find_cards("tag:shuffle")    
+
 def get_tagged_cards() -> list:
     """
     Description:
