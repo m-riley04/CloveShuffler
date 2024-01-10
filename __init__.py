@@ -358,8 +358,6 @@ def get_tagged_cards() -> list:
     """
     return mw.col.find_cards("tag:shuffle")
     
-# Hook up the tag shuffle to the answer button
-gui_hooks.reviewer_did_show_answer.append(shuffleTags)
 def toggled_autoshuffle():
     """
     Description:
@@ -382,10 +380,44 @@ def toggled_autoshuffle():
         
     mw.addonManager.writeConfig(__name__, config)
     
+# Initialize variables
+shuffleMethods = [shuffleTaggedInDeck, shuffleTaggedEverywhere, shuffleInDeck, shuffleEverywhere]
+
+# Fetch the config
+config = mw.addonManager.getConfig(__name__)
+autoshuffle = config["autoshuffle"]
+autoshuffle_method = config["autoshuffle_method"]
     
 # Create the menu action for the plugin
-action = QAction("Shuffle Clove", mw)
+group                   = QMenu("CloveShuffler")
+group_methods           = QMenu("Shuffle")
+action_taggedDeck       = QAction("Tagged In Deck", mw)
+action_taggedEverywhere = QAction("Tagged Everywhere", mw)
+action_deck             = QAction("In Deck", mw)
+action_everywhere       = QAction("Everywhere", mw)
+action_autoshuffle      = QAction("Autoshuffle", mw, checkable=True)
+
+# Set up autoshuffling
+if (autoshuffle):
+    gui_hooks.reviewer_did_show_answer.append(shuffleMethods[autoshuffle_method])
+action_autoshuffle.setChecked(autoshuffle)
+
+# Add all the menu actions to the new menu
+group_methods.addAction(action_taggedDeck)
+group_methods.addAction(action_taggedEverywhere)
+group_methods.addAction(action_deck)
+group_methods.addAction(action_everywhere)
+group.addMenu(group_methods)
+
 # Connect the signal of "triggered" to the "run" function
-qconnect(action.triggered, shuffleCommand)
-# Add the "Shuffle Clove" action to the tools dropdown menu
-mw.form.menuTools.addAction(action)
+qconnect(action_taggedDeck.triggered, shuffleTaggedInDeck)
+qconnect(action_taggedEverywhere.triggered, shuffleTaggedEverywhere)
+qconnect(action_deck.triggered, shuffleInDeck)
+qconnect(action_everywhere.triggered, shuffleEverywhere)
+qconnect(action_autoshuffle.triggered, toggled_autoshuffle)
+
+# Add the "Shuffle" group to the tools dropdown menu
+#mw.form.menuTools.addSection("CloveShuffler")
+#mw.form.menubar.addSection("CloveShuffler")
+group.addAction(action_autoshuffle)
+mw.form.menubar.addMenu(group)
