@@ -181,6 +181,7 @@ def insert_into_string_at_query(string:str, substr:str, query:str):
     """
     return string.split(delimeter)
 
+def get_deck_cards(deckName:str) -> list:
     """
     Description:
         Gets all the cards within a deck
