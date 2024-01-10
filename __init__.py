@@ -166,8 +166,8 @@ def insert_into_string_at_query(string:str, substr:str, query:str):
         _string = insert_into_string(_string, substr, _index+len(query))
     return _string
     
+def lines_from_string(string:str, delimeter:str="\n") -> list[str]:
     """
-    return text.split(delimeter)
     Description:
         Gets a list of strings that represent the lines of the inputted string. 
         Lines are determined by line breaks, or an optional 'delimeter' parameter.
@@ -230,6 +230,7 @@ def get_tagged_cards() -> list:
     """
     return mw.col.find_cards("tag:shuffle")
     
+# Hook up the tag shuffle to the answer button
 # Create the menu action for the plugin
 action = QAction("Shuffle Answers", mw)
 # Connect the signal of "triggered" to the "run" function
