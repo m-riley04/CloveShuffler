@@ -115,6 +115,7 @@ def _shuffle(text:str) -> str:
     
     return finalString
 
+def insert_into_string(string:str, substr:str, index:int):
     """
     Description:
         Inserts a given string into another string at a given index.
@@ -127,6 +128,7 @@ def _shuffle(text:str) -> str:
     Returns:
         str: A new string with the inserted text within
     """
+    return string[:index] + substr + string[index:]
     
 def lines_from_string(text:str, delimeter:str="\n") -> list[str]:
     """
