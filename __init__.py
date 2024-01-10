@@ -217,6 +217,7 @@ def get_current_cards() -> list:
     # Return the list of cards from helper function
     return get_deck_cards(deckName)
 
+def get_tagged_cards() -> list:
     """
     Description:
         Gets all the cards tagged with "shuffle"
@@ -227,6 +228,8 @@ def get_current_cards() -> list:
     Returns:
         list: A list of the cards with a tag "shuffle"
     """
+    return mw.col.find_cards("tag:shuffle")
+    
 # Create the menu action for the plugin
 action = QAction("Shuffle Answers", mw)
 # Connect the signal of "triggered" to the "run" function
