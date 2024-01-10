@@ -5,13 +5,17 @@ import random
 
 def run():
     """
-    The main command that is to be connected to the "Shuffle" action button. Does a sequence of actions:
-    1. Accesses the current deck and cards
-    2. Accesses the front and back fields of each cards
-    3. Shuffles the accessed fields (if any Clove fields exist)
+    Description:
+        The main command that is to be connected to the "Shuffle" action button. Does a sequence of actions:
+        1. Accesses the current deck and cards
+        2. Accesses the front and back fields of each cards
+        3. Shuffles the accessed fields (if any Clove fields exist)
+    
+    Arguments:
+        None
     
     Returns:
-        - None
+        None
     """
     # Get a list of the current cards
     ids = get_current_cards()
@@ -34,9 +38,13 @@ def run():
     # Tell the user the process is finished
     showInfo("Current deck's card answers have been successfully shuffled!")
             
-def isClove(text) -> bool:
+def isClove(text:str) -> bool:
     """
-    Checks whether or not a card face has Clove text formatting.
+    Description:
+        Checks whether or not a card face has Clove text formatting.
+    
+    Args:
+        text (str): The text to check for any Clove formatting
     
     Returns: 
         - bool
@@ -47,32 +55,73 @@ def isClove(text) -> bool:
 
 def shuffle(text:str) -> str:
     """
-    Shuffles the Clove answers of a card in a random order.
+    Definition: 
+        Shuffles the Clove answers of a card in a random order.
+        Determines what lines to shuffle based on whether it finds Clove formatting in the line.
+        If the first line does not have Clove formatting, it will stay the first line. After that,
+        if any Clove lines are detected, the following lines will be shuffled with it. 
     
-    Determines what lines to shuffle based on whether it finds Clove formatting in the line.
-    If the first line does not have Clove formatting, it will stay the first line. After that,
-    if any Clove lines are detected, the following lines will be shuffled with it. 
+    Args:
+        text (str): The field/card text to shuffle
     
     Returns: 
-        - str
+        str: The original card text, but with shuffled Clove lines
     """
     # Break the text into lines
     frontLines = lines_from_string(text, "<br>")
     
+    """
+    Description:
+        Inserts a given string into another string at a given index.
+
+    Args:
+        string (str): String to modify
+        substr (str): String to insert
+        index (int): Index of where to insert
+
+    Returns:
+        str: A new string with the inserted text within
+    """
     
 def lines_from_string(text:str, delimeter:str="\n") -> list[str]:
     """
-    Gets a list of strings that represent the lines of the inputted string. 
-    Lines are determined by line breaks, or an optional 'delimeter' parameter.
+    Description:
+        Inserts a given string into another string after a given text query, possibly multiple times
+
+    Arguments:
+        string (str): String to modify
+        substr (str): Text to insert
+        query (str): What piece of text to insert after
+
+    Returns:
+        str: A new string with the inserted text within
+    """
     
-    Returns: 
-        - list[str]
     """
     return text.split(delimeter)
+    Description:
+        Gets a list of strings that represent the lines of the inputted string. 
+        Lines are determined by line breaks, or an optional 'delimeter' parameter.
     
+    Arguments:
+        string (str): The string to take the lines from
+        delimeter (str): The separator that defines what a "line" is
+    
+    Returns: 
+        list[str]: A list of strings that represent each line of the given text string
+    """
+    return string.split(delimeter)
 
-def get_deck_cards(deckName:str) -> list[mw.Card]:
-    """Returns a list of cards when given a deck's name"""
+    """
+    Description:
+        Gets all the cards within a deck
+    
+    Arguments:
+        deckName (str): The deck's name
+        
+    Returns:
+        list: A list of the cards within the deck of name [deckName] 
+    """
     # Form the search tag for cards without spaces
     searchTag = "deck:" + deckName
     searchTag = searchTag.replace(" ", "_")
@@ -80,12 +129,16 @@ def get_deck_cards(deckName:str) -> list[mw.Card]:
     # Get a list of card IDs
     return mw.col.find_cards(searchTag)
 
-def get_current_cards() -> list[mw.Card]:
+def get_current_cards() -> list:
     """
-    Gets a list of the current deck's cards.
+    Description:
+        Gets all the cards within the currently selected/studying deck
     
-    Returns: 
-        - list[Card]
+    Arguments:
+        None
+        
+    Returns:
+        list: A list of the cards within the current deck
     """
     # Get the current deck and name
     deck = mw.col.decks.current()
@@ -94,6 +147,16 @@ def get_current_cards() -> list[mw.Card]:
     # Return the list of cards from helper function
     return get_deck_cards(deckName)
 
+    """
+    Description:
+        Gets all the cards tagged with "shuffle"
+    
+    Arguments:
+        None
+        
+    Returns:
+        list: A list of the cards with a tag "shuffle"
+    """
 # Create the menu action for the plugin
 action = QAction("Shuffle Answers", mw)
 # Connect the signal of "triggered" to the "run" function
