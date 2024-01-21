@@ -1,4 +1,5 @@
 {
     "autoshuffle": false,
-    "autoshuffle_method": 0
+    "autoshuffle_method": 0,
+    "debug_messages": false
 }
