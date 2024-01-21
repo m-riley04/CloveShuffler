@@ -162,53 +162,58 @@ def _shuffle(text:str) -> str:
     Returns: 
         str: The original card text, but with shuffled Cloze lines
     """
-    #=== Add temporary line breaks to certain HTML elements (ul, li, and br)
-    replacedText = insert_into_string_at_query(text, "\n", "<ul>")
-    replacedText = insert_into_string_at_query(replacedText, "\n", "</ul>")
-    replacedText = insert_into_string_at_query(replacedText, "\n", "</li>")
-    replacedText = insert_into_string_at_query(replacedText, "\n", "<br>")
-    
-    # Break the text into lines
-    lines = lines_from_string(replacedText, "\n")
-    
-    # Construct the final string piece by piece in 3 parts
-    firstLines = []
-    ClozeLines = []
-    lastLines = []
-    atCloze = False
-    pastCloze = False
-    for line in lines:
-        # Check for </ul>
-        if ("</ul>" in line):
-            pastCloze = True
+    try:
+        #=== Add temporary line breaks to certain HTML elements (ul, li, and br)
+        replacedText = insert_into_string_at_query(text, "\n", "<ul>")
+        replacedText = insert_into_string_at_query(replacedText, "\n", "</ul>")
+        replacedText = insert_into_string_at_query(replacedText, "\n", "</li>")
+        replacedText = insert_into_string_at_query(replacedText, "\n", "<br>")
+        
+        # Break the text into lines
+        lines = lines_from_string(replacedText, "\n")
+        
+        # Construct the final string piece by piece in 3 parts
+        firstLines = []
+        clozeLines = []
+        lastLines = []
+        atCloze = False
+        pastCloze = False
+        for line in lines:
+            # Check for </ul>
+            if ("</ul>" in line):
+                pastCloze = True
+                
+            # If the Cloze part is done, append the rest to the last part
+            if (pastCloze):
+                lastLines.append(line)
+                continue
             
-        # If the Cloze part is done, append the rest to the last part
-        if (pastCloze):
-            lastLines.append(line)
-            continue
+            # Check for first lines of text
+            if (not atCloze and not isCloze(line)):
+                # If there's no Cloze formatting and Cloze hasn't been found already, append the text to the final lines 
+                firstLines.append(line)
+                continue
+            atCloze = True
+            
+            # Append the line to the list of ClozeLines
+            clozeLines.append(line)
         
-        # Check for first lines of text
-        if (not atCloze and not isCloze(line)):
-            # If there's no Cloze formatting and Cloze hasn't been found already, append the text to the final lines 
-            firstLines.append(line)
-            continue
-        atCloze = True
+        # Randomize the Cloze lines
+        random.seed()
+        random.shuffle(clozeLines)
         
-        # Append the line to the list of ClozeLines
-        ClozeLines.append(line)
+        # Connect the 3 line parts together
+        firstLines += clozeLines
+        firstLines += lastLines
         
-    # Randomize the Cloze lines
-    random.seed()
-    random.shuffle(ClozeLines)
-    
-    # Connect the 3 line parts together
-    firstLines += ClozeLines
-    firstLines += lastLines
-    
-    # Reconnect the lines back into a string
-    finalString = "".join(firstLines)
-    
-    return finalString
+        # Reconnect the lines back into a string
+        finalString = "".join(firstLines)
+        
+        return finalString
+    except:
+        if (debug_messages):
+            showInfo(f"There was an issue shuffling the text of the following card text:\n'{text}'")
+        return text
 
 def isCloze(text:str) -> bool:
     """
@@ -253,6 +258,13 @@ def insert_into_string_at_query(string:str, substr:str, query:str):
     Returns:
         str: A new string with the inserted text within
     """
+    
+    # Check for empty query
+    if (query == ""):
+        if (debug_messages):
+            showInfo(f"Query was empty for string '{string}'.")
+        return string
+    
     # Initialize local variables
     _index = 0
     _string = string
@@ -379,6 +391,26 @@ def toggled_autoshuffle():
         gui_hooks.reviewer_did_show_answer.append(shuffleMethods[autoshuffle_method])
         
     mw.addonManager.writeConfig(__name__, config)
+
+def toggled_debugMessages():
+    """
+    Description:
+        The command for when the "Show Debug" action button is toggled
+    
+    Arguments:
+        None
+        
+    Returns:
+        None
+    """
+    if (not action_debugMessages.isChecked()):
+        config["debug_messages"] = False
+        debug_messages = False
+    else:
+        config["debug_messages"] = True
+        debug_messages = True
+        
+    mw.addonManager.writeConfig(__name__, config)
     
 # Initialize variables
 shuffleMethods = [shuffleTaggedInDeck, shuffleTaggedEverywhere, shuffleInDeck, shuffleEverywhere]
@@ -387,6 +419,7 @@ shuffleMethods = [shuffleTaggedInDeck, shuffleTaggedEverywhere, shuffleInDeck, s
 config = mw.addonManager.getConfig(__name__)
 autoshuffle = config["autoshuffle"]
 autoshuffle_method = config["autoshuffle_method"]
+debug_messages = config["debug_messages"]
     
 # Create the menu action for the plugin
 group                   = QMenu("ClozeShuffler")
@@ -396,11 +429,13 @@ action_taggedEverywhere = QAction("Tagged Everywhere", mw)
 action_deck             = QAction("In Deck", mw)
 action_everywhere       = QAction("Everywhere", mw)
 action_autoshuffle      = QAction("Autoshuffle", mw, checkable=True)
+action_debugMessages    = QAction("Show Debug", mw, checkable=True)
 
 # Set up autoshuffling
 if (autoshuffle):
     gui_hooks.reviewer_did_show_answer.append(shuffleMethods[autoshuffle_method])
 action_autoshuffle.setChecked(autoshuffle)
+action_debugMessages.setChecked(debug_messages)
 
 # Add all the menu actions to the new menu
 group_methods.addAction(action_taggedDeck)
@@ -415,9 +450,11 @@ qconnect(action_taggedEverywhere.triggered, shuffleTaggedEverywhere)
 qconnect(action_deck.triggered, shuffleInDeck)
 qconnect(action_everywhere.triggered, shuffleEverywhere)
 qconnect(action_autoshuffle.triggered, toggled_autoshuffle)
+qconnect(action_debugMessages.triggered, toggled_debugMessages)
 
 # Add the "Shuffle" group to the tools dropdown menu
 #mw.form.menuTools.addSection("ClozeShuffler")
 #mw.form.menubar.addSection("ClozeShuffler")
 group.addAction(action_autoshuffle)
+group.addAction(action_debugMessages)
 mw.form.menubar.addMenu(group)
